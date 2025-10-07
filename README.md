@@ -17,7 +17,7 @@ This project automates the complete deployment of Open WebUI connected with Olla
 - Infrastructure & Cloud Setup(Ec2)
 - Cloud Provider: AWS
 - Instance Type: t3.medium (2 vCPUs, 4 GB RAM)
-- Storage: 200 GB EBS Volume (extended using growpart + resize2fs)
+- Storage: 200 GB EBS Volume 
 - Provisioning: Terraform (with User Data to install Docker, Kind, and kubectl)
 - Configuration Management: Ansible
 - Container Orchestration: Kubernetes (Kind Cluster) with Ansible
