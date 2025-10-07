@@ -75,7 +75,7 @@ EC2_PUBLIC_IP ansible_user=ubuntu ansible_ssh_private_key_file=../ai_ec2_key.pem
 cd ../Ansible
 ansible-playbook -i hosts.ini ansible-playbook.yml
 ```
-![AWS Resources](ping-ec2.png)
+![AWS Resources](ping.png)
 This playbook:
 - Verifies EC2 connectivity
 - Creates a Kind cluster
