@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ollama-shared-pvc
+  namespace: ai-deployment
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 20Gi
+  storageClassName: standard
+# kubectl apply -f ollama-shared-pvc.yaml -n ai-deployment
+# kubectl delete pvc ollama-shared-pvc -n ai-deployment
+# kubectl get pvc -n ai-deployment
+

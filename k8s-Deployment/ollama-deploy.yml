@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ollama
+  namespace: ai-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ollama
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: ollama
+    spec:
+      containers:
+        - name: ollama
+          image: ollama/ollama:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 11434
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "1Gi"
+            limits:
+              cpu: "1000m"
+              memory: "2Gi"
+          volumeMounts:
+            - name: ollama-storage
+              mountPath: /root/.ollama
+          tty: true
+      volumes:
+        - name: ollama-storage
+          persistentVolumeClaim:
+            claimName: ollama-shared-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ollama
+  namespace: ai-deployment
+spec:
+  type: NodePort
+  selector:
+    app: ollama
+  ports:
+    - name: http
+      port: 11434
+      targetPort: 11434
+      nodePort: 31434
+
+# kubectl apply -f ollama-deploy.yml -n ai-deployment
+# kubectl exec -it deploy/ollama -n ai-deployment -- ollama pull llama3:latest
+# kubectl exec -it deploy/ollama -n ai-deployment -- ollama pull llama2:latest
+# kubectl exec -it deploy/ollama -n ai-deployment -- ollama list
+# kubectl get endpoints ollama -n ai-deployment
+# kubectl get svc -n ai-deployment
+# kubectl delete  -f ollama-deploy.yml -n ai-deployment

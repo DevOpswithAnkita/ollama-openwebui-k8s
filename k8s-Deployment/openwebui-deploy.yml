@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openwebui
+  namespace: ai-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: openwebui
+  template:
+    metadata:
+      labels:
+        app: openwebui
+    spec:
+      containers:
+        - name: openwebui
+          image: ghcr.io/open-webui/open-webui:main
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          env:
+            - name: OLLAMA_API_BASE_URL
+              value: "http://ollama:11434"
+            - name: ENABLE_OLLAMA_PROXY
+              value: "true"
+            - name: WEBUI_AUTH
+              value: "false"
+          volumeMounts:
+            - name: ollama-storage
+              mountPath: /root/.ollama
+      volumes:
+        - name: ollama-storage
+          persistentVolumeClaim:
+            claimName: ollama-shared-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: openwebui
+  namespace: ai-deployment
+spec:
+  type: NodePort
+  selector:
+    app: openwebui
+  ports:
+    - port: 80
+      targetPort: 8080
+      nodePort: 30080
+
+# kubectl apply -f openwebui-deploy.yml -n ai-deployment
+# kubectl rollout restart deploy openwebui -n ai-deployment
+# kubectl exec -it deploy/openwebui -n ai-deployment -- printenv | grep OLLAMA
+# kubectl exec -it deploy/openwebui -n ai-deployment -- curl http://ollama.ai-deployment.svc.cluster.local:11434/api/tags
+# kubectl exec -it deploy/openwebui -n ai-deployment -- curl http://ollama:11434/api/tags
+# kubectl get pods -A

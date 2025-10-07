@@ -1,0 +1,82 @@
+---
+- name: Deploy Ollama Apps on Kind Cluster
+  hosts: all
+  become: yes
+  vars:
+    k8s_folder: /home/ubuntu/k8s-Deployment
+    k8s_namespace: ai-deployment
+    kind_cluster_name: kind
+
+  # Set environment so PATH and kubeconfig are available for all tasks
+  environment:
+    PATH: "/usr/local/bin:{{ ansible_env.PATH }}"
+    KUBECONFIG: /home/ubuntu/.kube/config
+
+  tasks:
+    - name: Pull Ollama Docker image
+      docker_image:
+        name: ollama/ollama:latest
+        source: pull
+
+    - name: Pull Open WebUI Docker image
+      docker_image:
+        name: ghcr.io/open-webui/open-webui:main
+        source: pull
+
+    - name: Create k8s-Deployment directory
+      file:
+        path: "{{ k8s_folder }}"
+        state: directory
+        owner: ubuntu
+        group: ubuntu
+        mode: 0755
+
+    - name: Copy k8s-Deployment files to EC2
+      copy:
+        src: "{{ playbook_dir }}/../k8s-Deployment/"
+        dest: "{{ k8s_folder }}/"
+        owner: ubuntu
+        group: ubuntu
+        mode: 0755
+
+    - name: Check if Kind cluster exists
+      shell: kind get clusters | grep -w "{{ kind_cluster_name }}" || true
+      register: kind_cluster
+      changed_when: false
+
+    - name: Delete existing Kind cluster if found
+      shell: kind delete cluster --name {{ kind_cluster_name }}
+      when: kind_cluster.stdout != ""
+      ignore_errors: yes
+
+    - name: Create Kind cluster
+      shell: kind create cluster --name {{ kind_cluster_name }} --config {{ k8s_folder }}/kind-config.yml
+
+    - name: Verify cluster info
+      shell: kubectl cluster-info
+      register: cluster_info
+    - debug:
+        msg: "{{ cluster_info.stdout }}"
+
+    - name: Create AI deployment namespace
+      shell: kubectl create namespace {{ k8s_namespace }}
+      ignore_errors: yes
+    - name: Apply Ollama Shared PVC
+      shell: kubectl apply -f {{ k8s_folder }}/ollama-shared-pvc.yaml -n {{ k8s_namespace }}
+
+    - name: Deploy Ollama
+      shell: kubectl apply -f {{ k8s_folder }}/ollama-deploy.yml -n {{ k8s_namespace }}
+
+    - name: Deploy Open WebUI
+      shell: kubectl apply -f {{ k8s_folder }}/openwebui-deploy.yml -n {{ k8s_namespace }}
+    
+    - name: Get all pods
+      shell: kubectl get pods -A
+      register: pods_output
+
+    - debug:
+        msg: "{{ pods_output.stdout }}"
+
+    - name: Install Ollama 2 
+      shell: kubectl exec -it deploy/ollama -n ai-deployment -- ollama pull llama2:latest
+    

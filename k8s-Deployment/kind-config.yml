@@ -1,0 +1,24 @@
+# kind-cluster.yaml
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+
+# Cluster configuration for testing on a single EC2 instance
+nodes:
+  - role: control-plane
+    image: kindest/node:v1.33.1
+    extraPortMappings:
+      - containerPort: 30080   # Expose NodePort for Open WebUI
+        hostPort: 30080
+      - containerPort: 11434   # Expose Ollama API
+        hostPort: 11434
+
+  - role: worker
+    image: kindest/node:v1.33.1
+
+  - role: worker
+    image: kindest/node:v1.33.1
+
+# Networking options
+networking:
+  disableDefaultCNI: false
+  kubeProxyMode: "iptables"
