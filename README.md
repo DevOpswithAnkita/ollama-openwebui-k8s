@@ -11,6 +11,8 @@ This project automates the complete deployment of Open WebUI connected with Olla
 - Ansible connects to EC2 and sets up a Kind-based Kubernetes cluster
 - Ansible deploys Ollama and Open WebUI pods and services
 - Open WebUI connects internally to Ollama (via service DNS) and exposes the interface to the internet
+
+  
 ![AWS Resources](ollama.png)
 
 ## Tech Stack
