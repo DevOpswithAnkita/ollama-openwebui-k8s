@@ -12,14 +12,20 @@ This project automates the complete deployment of Open WebUI connected with Olla
 - Ansible deploys Ollama and Open WebUI pods and services
 - Open WebUI connects internally to Ollama (via service DNS) and exposes the interface to the internet
 ![AWS Resources](ollama.png)
+
 ## Tech Stack
-- AWS EC2
-- Terraform
-- Ansible
-- Docker
-- Kubernetes (Kind)
-- Open WebUI
-- Ollama (Llama 2 model)
+- Infrastructure & Cloud Setup(Ec2)
+- Cloud Provider: AWS
+- Instance Type: t3.medium (2 vCPUs, 4 GB RAM)
+- Storage: 200 GB EBS Volume (extended using growpart + resize2fs)
+- Provisioning: Terraform (with User Data to install Docker, Kind, and kubectl)
+- Configuration Management: Ansible
+- Container Orchestration: Kubernetes (Kind Cluster) with Ansible
+- LLM Hosting: Ollama (lightweight model server for Llama 2)
+- Frontend UI: Open WebUI (connected to Ollama via internal service)
+- Namespace: ai-deployment
+- Storage Type: Shared Persistent Volume Claim (ollama-shared-pvc)
+- Networking: NodePort Service for external OpenWebUI access
 
 ## Project Structure
 ```
