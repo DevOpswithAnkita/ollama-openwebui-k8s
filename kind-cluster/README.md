@@ -1,115 +1,96 @@
-# KIND Cluster Setup Guide
+# Kubernetes Development Environment Setup
 
-## 1. Installing KIND and kubectl
-Install KIND and kubectl using the provided [script](https://github.com/LondheShubham153/kubestarter/blob/main/kind-cluster/install.sh):
+This script automates the installation of essential Kubernetes development tools on Linux systems.
 
-## 2. Setting Up the KIND Cluster
-Create a kind-config.yaml file:
+## Tools Installed
 
-```yaml
+- **Docker** - Container runtime platform
+- **Kind** (Kubernetes in Docker) - Tool for running local Kubernetes clusters
+- **kubectl** - Kubernetes command-line tool
+- **Helm** - Kubernetes package manager ("Not necessary")
+ 
+## Prerequisites
 
-kind: Cluster
-apiVersion: kind.x-k8s.io/v1alpha4
-nodes:
-  - role: control-plane
-    image: kindest/node:v1.33.1
-  - role: worker
-    image: kindest/node:v1.33.1
-  - role: worker
-    image: kindest/node:v1.33.1
-```
-Create the cluster using the configuration file:
+- Linux operating system (Ubuntu/Debian-based recommended)
+- `sudo` privileges
+- Internet connection
+- Supported architecture: `x86_64` or `aarch64` (ARM64)
 
-```bash
+## Installation
 
-kind create cluster --config kind-config.yaml --name tws-kind-cluster
-```
-Verify the cluster:
+### 1. Download the Script
+
+Save the installation script to a file (e.g., `install.sh`).
+
+### 2. Make it Executable
 
 ```bash
-
-kubectl get nodes
-kubectl cluster-info
-```
-## 3. Accessing the Cluster
-Use kubectl to interact with the cluster:
-```bash
-
-kubectl cluster-info
+chmod +x install.sh
 ```
 
-
-## 4. Setting Up the Kubernetes Dashboard
-Deploy the Dashboard
-Apply the Kubernetes Dashboard manifest:
-```bash
-
-kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.7.0/aio/deploy/recommended.yaml
-```
-Create an Admin User
-Create a dashboard-admin-user.yml file with the following content:
-
-```yaml
-
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: admin-user
-  namespace: kubernetes-dashboard
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: admin-user
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: cluster-admin
-subjects:
-- kind: ServiceAccount
-  name: admin-user
-  namespace: kubernetes-dashboard
-```
-Apply the configuration:
+### 3. Run the Script
 
 ```bash
-
-kubectl apply -f dashboard-admin-user.yml
+./install.sh
 ```
-Get the Access Token
-Retrieve the token for the admin-user:
+
+## What the Script Does
+
+### Docker Installation
+- Checks if Docker is already installed
+- Installs `docker.io` package via apt
+- Adds current user to the `docker` group for non-root access
+- Note: You may need to log out and log back in for group changes to take effect
+
+### Kind Installation
+- Detects system architecture (x86_64 or ARM64)
+- Downloads the appropriate Kind binary (v0.29.0)
+- Installs to `/usr/local/bin/kind`
+
+### kubectl Installation
+- Fetches the latest stable version automatically
+- Downloads and installs kubectl for Linux AMD64
+- Installs to `/usr/local/bin/kubectl`
+
+### Helm Installation
+- Downloads Helm v3.13.4
+- Extracts and installs to `/usr/local/bin/helm`
+
+## Post-Installation
+
+After running the script, verify the installations:
 
 ```bash
-
-kubectl -n kubernetes-dashboard create token admin-user
+docker --version
+kind --version
+kubectl version --client
 ```
-Copy the token for use in the Dashboard login.
+### Docker Group Permissions
 
-Access the Dashboard
-Start the Dashboard using kubectl proxy:
+If you encounter Docker permission errors, you may need to:
 
+1. Log out and log back in, or
+2. Run `newgrp docker` in your current session, or
+3. Restart your system
+
+## Version Information
+
+- Kind: v0.29.0
+- kubectl: Latest stable version (auto-detected)
+- Docker: Latest available from apt repository
+
+## Additional Resources
+
+- [Docker Documentation](https://docs.docker.com/)
+- [Kind Documentation](https://kind.sigs.k8s.io/)
+- [kubectl Documentation](https://kubernetes.io/docs/reference/kubectl/)
+  
+## License
+
+This setup script is provided as-is for development purposes.
+
+## Note
+This configuration automatically runs an installation script (install.sh) on instance boot using Terraform's user_data property.
 ```bash
-
-kubectl proxy
+user_data = file("../kind-cluster/install.sh") # installs Docker, ai, kubectl — noted
 ```
-Open the Dashboard in your browser:
-
-```bash
-
-http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/
-```
-Use the token from the previous step to log in.
-
-## 5. Deleting the Cluster
-Delete the KIND cluster:
-```bash
-
-kind delete cluster --name my-kind-cluster
-```
-
-## 6. Notes
-
-Multiple Clusters: KIND supports multiple clusters. Use unique --name for each cluster.
-Custom Node Images: Specify Kubernetes versions by updating the image in the configuration file.
-Ephemeral Clusters: KIND clusters are temporary and will be lost if Docker is restarted.
-
