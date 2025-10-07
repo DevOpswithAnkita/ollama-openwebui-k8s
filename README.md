@@ -24,22 +24,32 @@ This project automates the complete deployment of Open WebUI connected with Olla
 ## Project Structure
 ```
 .
-├── Terraform/
-│   ├── main.tf              # AWS infrastructure definition
-│   ├── variables.tf         # Input variables
-│   ├── outputs.tf           # Output values
-│   └── userdata.sh          # Bootstrap script for EC2
-├── Ansible/
-│   ├── ansible-playbook.yml # Main deployment playbook
-│   └── hosts.ini            # Inventory file
-├── k8s-Deployment/
-│   ├── namespace.yml
-│   ├── ollama-deployment.yml
-│   ├── ollama-service.yml
-│   ├── openwebui-deployment.yml
-│   └── openwebui-service.yml
-└── kind-cluster/
-    ├── kind-config.yml
+├── Ansible
+│   ├── README.md
+│   ├── ai_ec2_key.pem
+│   ├── ansible-playbook.yml
+│   ├── hosts.ini
+│   └── volums-size-issue .png
+├── LICENSE
+├── OpenWebUI.png
+├── README.md
+├── Terraform
+│   ├── README.md
+│   ├── infra-done.png
+│   ├── main.tf
+│   ├── outputs.tf
+│   ├── terraform.tfstate
+│   ├── terraform.tfstate.backup
+│   └── variables.tf
+├── ai_ec2_key.pem
+├── k8s-Deployment
+│   ├── README.md
+│   ├── kind-config.yml
+│   ├── ollama-deploy.yml
+│   ├── ollama-shared-pvc.yaml
+│   └── openwebui-deploy.yml
+└── kind-cluster
+    ├── README.md
     └── install.sh
 ```
 
