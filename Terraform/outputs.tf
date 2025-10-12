@@ -7,7 +7,7 @@ output "ec2_public_ip" {
 # WebUI URL
 output "webui_url" {
   description = "URL to access Open WebUI on the EC2 instance"
-  value       = "http://${aws_instance.ai_ec2.public_ip}:8080"
+  value       = "http://${aws_instance.ai_ec2.public_ip}:30080"
 }
 
 # Ollama API URL
