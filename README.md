@@ -73,6 +73,8 @@ This project automates the complete deployment of Open WebUI connected with Olla
 ```bash
 cd Terraform
 terraform init
+terraform plan
+ssh-keygen -t rsa -b 2048 -f ../ai_ec2_key (ADD AWS Key Pair)
 terraform apply -auto-approve
 ```
 Terraform provisions:
@@ -81,16 +83,16 @@ Terraform provisions:
 - Userdata script that installs Docker, Kind, and kubectl
 
 ### Step 2: Configure Ansible
-Update `Ansible/hosts.ini` with your EC2 IP:
+Update `../Ansible/hosts.ini` with your EC2 IP:
 ```ini
 [webservers]
 EC2_PUBLIC_IP ansible_user=ubuntu ansible_ssh_private_key_file=../ai_ec2_key.pem ansible_ssh_common_args='-o StrictHostKeyChecking=no'
 ```
 
-
 ### Step 3: Deploy Applications
 ```bash
 cd ../Ansible
+ansible all -i hosts.ini -m ping
 ansible-playbook -i hosts.ini ansible-playbook.yml
 ```
 ![AWS Resources](ping.png)
@@ -106,22 +108,30 @@ kubectl get svc openwebui -n ai-deployment
 ```
 Access URL: `http://<EC2_PUBLIC_IP>:<NODEPORT>`
 ![AWS Resources](OpenWebUI.png)
+
+### Connected Ollama models in OpenWebUI:
+   
+   ## Go to User Admin Panel → Settings → Connections → Manage Ollama API ▪️Connections → Update the Ollama URL: "http://ollama:11434"
+
 ![AWS Resources](chat.png)
 
-## Verification
+## Verification using cli
 
 ### Check Pod Status
+
 ```bash
 kubectl get pods -n ai-deployment
 ```
 
-### Test Ollama Connection
+### Test Ollama Connection using cli
+
 ```bash
 kubectl exec -it deploy/openwebui -n ai-deployment -- curl http://ollama:11434/api/tags
 ```
 You should see a list of models (e.g., llama2:latest).
 
-### Check Loaded Models
+### Check Loaded Models on terminal 
+
 ```bash
 kubectl exec -it deploy/ollama -n ai-deployment -- ollama list
 ```
@@ -136,7 +146,7 @@ kubectl exec -it deploy/ollama -n ai-deployment -- ollama list
 | k8s-Deployment/*.yml | Kubernetes manifests for Ollama & Open WebUI |
 | kind-cluster/install.sh | Helper script for Kind setup |
 
-## Common Issues & Solutions
+#### Common Issues & Solutions
 
 ### Docker Permission Denied
 ```bash
@@ -163,11 +173,12 @@ sudo resize2fs /dev/xvda1
 ```
 ### Ram Issue  
 ```bash
-The model you are trying to load needs 6 GiB of RAM, but your system currently only has 1.8 GiB free. I change it to t3.large (8 GiB)
+The model you are trying to load needs 6 GiB of RAM, but your system currently only has 1.8 GiB free. I change it to t3.xlarge (16 GiB)
 ```
 ![AWS Resources](Error-After-Deployment.png)
 
-## Debug Commands
+#### Debug Commands
+
 ```bash
 # View all resources
 kubectl get all -n ai-deployment
@@ -180,7 +191,8 @@ kubectl logs -f deploy/openwebui -n ai-deployment
 kubectl describe pod <pod-name> -n ai-deployment
 ```
 
-## Production Considerations
+#### Production Considerations
+
 This setup is designed for **development/testing with AWS free tier**. For production:
 
 - **Use EKS instead of Kind** for better reliability and scalability
