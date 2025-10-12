@@ -18,7 +18,7 @@ This project automates the complete deployment of Open WebUI connected with Olla
 ## Tech Stack
 - Infrastructure & Cloud Setup(Ec2)
 - Cloud Provider: AWS
-- Instance Type: t3.medium (2 vCPUs, 4 GB RAM)
+- Instance Type: t3.xlarge (4 vCPUs, 16 GB RAM) (Llama2 latest can easily need 4–8Gi memory, otherwise it gets OOMKilled.)
 - Storage: 200 GB EBS Volume 
 - Provisioning: Terraform (with User Data to install Docker, Kind, and kubectl)
 - Configuration Management: Ansible

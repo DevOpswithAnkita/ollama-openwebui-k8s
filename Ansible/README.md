@@ -33,7 +33,7 @@ ansible --version
 
 Navigate to your Ansible project directory:
 ```bash
-cd /Ansible
+cd ../Ansible 
 ```
 
 ---
