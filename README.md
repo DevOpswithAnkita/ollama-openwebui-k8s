@@ -106,6 +106,7 @@ kubectl get svc openwebui -n ai-deployment
 ```
 Access URL: `http://<EC2_PUBLIC_IP>:<NODEPORT>`
 ![AWS Resources](OpenWebUI.png)
+![AWS Resources](chat.png)
 
 ## Verification
 
