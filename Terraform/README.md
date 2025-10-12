@@ -47,6 +47,10 @@ terraform apply -auto-approve
 ```bash
 terraform output
 ```
+6. **If destroy All Infra**:
+```bash
+terraform destroy -auto-approve
+```
 
 ***Open the URL in your browser***
   ```bash
