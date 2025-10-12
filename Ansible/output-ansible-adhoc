@@ -1,0 +1,217 @@
+# #output
+#  ansible all -i hosts.ini -m ping
+
+# [WARNING]: Host '54.81.76.56' is using the discovered Python interpreter at '/usr/bin/python3.12', but future installation of another Python interpreter could cause a different interpreter to be discovered. See https://docs.ansible.com/ansible-core/2.19/reference_appendices/interpreter_discovery.html for more information.
+# 54.81.76.56 | SUCCESS => {
+#     "ansible_facts": {
+#         "discovered_interpreter_python": "/usr/bin/python3.12"
+#     },
+#     "changed": false,
+#     "ping": "pong"
+# }
+# terminal#ansible all -i hosts.ini -u ubuntu -b -m user -a "name=ubuntu groups=docker append=yes"
+
+# [WARNING]: Host '54.81.76.56' is using the discovered Python interpreter at '/usr/bin/python3.12', but future installation of another Python interpreter could cause a different interpreter to be discovered. See https://docs.ansible.com/ansible-core/2.19/reference_appendices/interpreter_discovery.html for more information.
+# 54.81.76.56 | CHANGED => {
+#     "ansible_facts": {
+#         "discovered_interpreter_python": "/usr/bin/python3.12"
+#     },
+#     "append": true,
+#     "changed": true,
+#     "comment": "Ubuntu",
+#     "group": 1000,
+#     "groups": "docker",
+#     "home": "/home/ubuntu",
+#     "move_home": false,
+#     "name": "ubuntu",
+#     "shell": "/bin/bash",
+#     "state": "present",
+#     "uid": 1000
+# }
+# terminal#ansible all -i hosts.ini -u ubuntu -b -m file -a "path=/var/run/docker.sock mode=0666"
+
+# [WARNING]: Host '54.81.76.56' is using the discovered Python interpreter at '/usr/bin/python3.12', but future installation of another Python interpreter could cause a different interpreter to be discovered. See https://docs.ansible.com/ansible-core/2.19/reference_appendices/interpreter_discovery.html for more information.
+# 54.81.76.56 | CHANGED => {
+#     "ansible_facts": {
+#         "discovered_interpreter_python": "/usr/bin/python3.12"
+#     },
+#     "changed": true,
+#     "gid": 113,
+#     "group": "docker",
+#     "mode": "0666",
+#     "owner": "root",
+#     "path": "/var/run/docker.sock",
+#     "size": 0,
+#     "state": "file",
+#     "uid": 0
+# }
+# terminal#ansible all -i hosts.ini -u ubuntu -b -m file -a "path=/home/ubuntu/k8s-Deployment state=directory owner=ubuntu group=ubuntu mode=0755"
+
+# [WARNING]: Host '54.81.76.56' is using the discovered Python interpreter at '/usr/bin/python3.12', but future installation of another Python interpreter could cause a different interpreter to be discovered. See https://docs.ansible.com/ansible-core/2.19/reference_appendices/interpreter_discovery.html for more information.
+# 54.81.76.56 | CHANGED => {
+#     "ansible_facts": {
+#         "discovered_interpreter_python": "/usr/bin/python3.12"
+#     },
+#     "changed": true,
+#     "gid": 1000,
+#     "group": "ubuntu",
+#     "mode": "0755",
+#     "owner": "ubuntu",
+#     "path": "/home/ubuntu/k8s-Deployment",
+#     "size": 4096,
+#     "state": "directory",
+#     "uid": 1000
+# }
+# terminal#ansible all -i hosts.ini -u ubuntu -b -m copy -a "src=../k8s-Deployment/ dest=/home/ubuntu/k8s-Deployment/ owner=ubuntu group=ubuntu mode=0644"
+
+
+
+# [WARNING]: Host '54.81.76.56' is using the discovered Python interpreter at '/usr/bin/python3.12', but future installation of another Python interpreter could cause a different interpreter to be discovered. See https://docs.ansible.com/ansible-core/2.19/reference_appendices/interpreter_discovery.html for more information.
+# 54.81.76.56 | CHANGED => {
+#     "changed": true,
+#     "dest": "/home/ubuntu/k8s-Deployment/",
+#     "src": "ollama-openwebui-k8s/Ansible/../k8s-Deployment/"
+# }
+# terminal#
+# terminal#
+# terminal#ansible all -i hosts.ini -u ubuntu -m command -a "kind get clusters"
+
+# [WARNING]: Host '54.81.76.56' is using the discovered Python interpreter at '/usr/bin/python3.12', but future installation of another Python interpreter could cause a different interpreter to be discovered. See https://docs.ansible.com/ansible-core/2.19/reference_appendices/interpreter_discovery.html for more information.
+# 54.81.76.56 | CHANGED | rc=0 >>
+# No kind clusters found.
+# terminal#ansible all -i hosts.ini -u ubuntu -m command -a "kind create cluster --name kind --config /home/ubuntu/k8s-Deployment/kind-config.yml"
+
+# [WARNING]: Host '54.81.76.56' is using the discovered Python interpreter at '/usr/bin/python3.12', but future installation of another Python interpreter could cause a different interpreter to be discovered. See https://docs.ansible.com/ansible-core/2.19/reference_appendices/interpreter_discovery.html for more information.
+# 54.81.76.56 | CHANGED | rc=0 >>
+# Creating cluster "kind" ...
+#  • Ensuring node image (kindest/node:v1.33.1) 🖼  ...
+#  ✓ Ensuring node image (kindest/node:v1.33.1) 🖼
+#  • Preparing nodes 📦 📦 📦   ...
+#  ✓ Preparing nodes 📦 📦 📦 
+#  • Writing configuration 📜  ...
+#  ✓ Writing configuration 📜
+#  • Starting control-plane 🕹️  ...
+#  ✓ Starting control-plane 🕹️
+#  • Installing CNI 🔌  ...
+#  ✓ Installing CNI 🔌
+#  • Installing StorageClass 💾  ...
+#  ✓ Installing StorageClass 💾
+#  • Joining worker nodes 🚜  ...
+#  ✓ Joining worker nodes 🚜
+# Set kubectl context to "kind-kind"
+# You can now use your cluster with:
+
+# kubectl cluster-info --context kind-kind
+
+# Have a question, bug, or feature request? Let us know! https://kind.sigs.k8s.io/#community 🙂
+# terminal#ansible all -i hosts.ini -u ubuntu -m command -a "kubectl get nodes"
+
+# [WARNING]: Host '54.81.76.56' is using the discovered Python interpreter at '/usr/bin/python3.12', but future installation of another Python interpreter could cause a different interpreter to be discovered. See https://docs.ansible.com/ansible-core/2.19/reference_appendices/interpreter_discovery.html for more information.
+# 54.81.76.56 | CHANGED | rc=0 >>
+# NAME                 STATUS   ROLES           AGE   VERSION
+# kind-control-plane   Ready    control-plane   35s   v1.33.1
+# kind-worker          Ready    <none>          23s   v1.33.1
+# kind-worker2         Ready    <none>          22s   v1.33.1
+# terminal#ansible all -i hosts.ini -u ubuntu -m command -a "kubectl create namespace ai-deployment"
+
+# [WARNING]: Host '54.81.76.56' is using the discovered Python interpreter at '/usr/bin/python3.12', but future installation of another Python interpreter could cause a different interpreter to be discovered. See https://docs.ansible.com/ansible-core/2.19/reference_appendices/interpreter_discovery.html for more information.
+# 54.81.76.56 | CHANGED | rc=0 >>
+# namespace/ai-deployment created
+# terminal#ansible all -i hosts.ini -u ubuntu -m command -a "kubectl apply -f /home/ubuntu/k8s-Deployment/ollama-shared-pvc.yaml -n ai-deployment"
+
+# [WARNING]: Host '54.81.76.56' is using the discovered Python interpreter at '/usr/bin/python3.12', but future installation of another Python interpreter could cause a different interpreter to be discovered. See https://docs.ansible.com/ansible-core/2.19/reference_appendices/interpreter_discovery.html for more information.
+# 54.81.76.56 | CHANGED | rc=0 >>
+# persistentvolumeclaim/ollama-shared-pvc created
+# terminal#ansible all -i hosts.ini -u ubuntu -m command -a "kubectl apply -f /home/ubuntu/k8s-Deployment/ollama-deploy.yml -n ai-deployment"
+
+# [WARNING]: Host '54.81.76.56' is using the discovered Python interpreter at '/usr/bin/python3.12', but future installation of another Python interpreter could cause a different interpreter to be discovered. See https://docs.ansible.com/ansible-core/2.19/reference_appendices/interpreter_discovery.html for more information.
+# 54.81.76.56 | CHANGED | rc=0 >>
+# deployment.apps/ollama created
+# service/ollama created
+# terminal#ansible all -i hosts.ini -u ubuntu -m command -a "kubectl apply -f /home/ubuntu/k8s-Deployment/openwebui-deploy.yml -n ai-deployment"
+
+# [WARNING]: Host '54.81.76.56' is using the discovered Python interpreter at '/usr/bin/python3.12', but future installation of another Python interpreter could cause a different interpreter to be discovered. See https://docs.ansible.com/ansible-core/2.19/reference_appendices/interpreter_discovery.html for more information.
+# 54.81.76.56 | CHANGED | rc=0 >>
+# deployment.apps/openwebui created
+# service/openwebui created
+# terminal#ansible all -i hosts.ini -u ubuntu -m command -a "kubectl get pods -n ai-deployment"
+
+# [WARNING]: Host '54.81.76.56' is using the discovered Python interpreter at '/usr/bin/python3.12', but future installation of another Python interpreter could cause a different interpreter to be discovered. See https://docs.ansible.com/ansible-core/2.19/reference_appendices/interpreter_discovery.html for more information.
+# 54.81.76.56 | CHANGED | rc=0 >>
+# NAME                         READY   STATUS              RESTARTS   AGE
+# ollama-8f4c4ff69-5xqlt       0/1     ContainerCreating   0          24s
+# openwebui-7b4844b675-kzq7h   0/1     ContainerCreating   0          13s
+# terminal#ansible all -i hosts.ini -u ubuntu -m command -a "kubectl get all -n ai-deployment"
+
+# [WARNING]: Host '54.81.76.56' is using the discovered Python interpreter at '/usr/bin/python3.12', but future installation of another Python interpreter could cause a different interpreter to be discovered. See https://docs.ansible.com/ansible-core/2.19/reference_appendices/interpreter_discovery.html for more information.
+# 54.81.76.56 | CHANGED | rc=0 >>
+# NAME                             READY   STATUS              RESTARTS   AGE
+# pod/ollama-8f4c4ff69-5xqlt       0/1     ContainerCreating   0          39s
+# pod/openwebui-7b4844b675-kzq7h   0/1     ContainerCreating   0          28s
+
+# NAME                TYPE       CLUSTER-IP      EXTERNAL-IP   PORT(S)           AGE
+# service/ollama      NodePort   10.96.175.142   <none>        11434:31434/TCP   39s
+# service/openwebui   NodePort   10.96.150.233   <none>        80:30080/TCP      28s
+
+# NAME                        READY   UP-TO-DATE   AVAILABLE   AGE
+# deployment.apps/ollama      0/1     1            0           39s
+# deployment.apps/openwebui   0/1     1            0           28s
+
+# NAME                                   DESIRED   CURRENT   READY   AGE
+# replicaset.apps/ollama-8f4c4ff69       1         1         0       39s
+# replicaset.apps/openwebui-7b4844b675   1         1         0       28s
+# terminal#ansible all -i hosts.ini -u ubuntu -m command -a "kubectl get svc -n ai-deployment"
+
+# [WARNING]: Host '54.81.76.56' is using the discovered Python interpreter at '/usr/bin/python3.12', but future installation of another Python interpreter could cause a different interpreter to be discovered. See https://docs.ansible.com/ansible-core/2.19/reference_appendices/interpreter_discovery.html for more information.
+# 54.81.76.56 | CHANGED | rc=0 >>
+# NAME        TYPE       CLUSTER-IP      EXTERNAL-IP   PORT(S)           AGE
+# ollama      NodePort   10.96.175.142   <none>        11434:31434/TCP   49s
+# openwebui   NodePort   10.96.150.233   <none>        80:30080/TCP      38s
+# terminal#ansible all -i hosts.ini -u ubuntu -m command -a "kubectl get pvc -n ai-deployment"
+
+# [WARNING]: Host '54.81.76.56' is using the discovered Python interpreter at '/usr/bin/python3.12', but future installation of another Python interpreter could cause a different interpreter to be discovered. See https://docs.ansible.com/ansible-core/2.19/reference_appendices/interpreter_discovery.html for more information.
+# 54.81.76.56 | CHANGED | rc=0 >>
+# NAME                STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE
+# ollama-shared-pvc   Bound    pvc-b7fe22bc-2a92-4188-9320-79cc3de39543   100Gi      RWO            standard       <unset>                 84s
+# terminal#ansible all -i hosts.ini -m command -a "kubectl get pvc -n ai-deployment"
+
+# [WARNING]: Host '54.81.76.56' is using the discovered Python interpreter at '/usr/bin/python3.12', but future installation of another Python interpreter could cause a different interpreter to be discovered. See https://docs.ansible.com/ansible-core/2.19/reference_appendices/interpreter_discovery.html for more information.
+# 54.81.76.56 | CHANGED | rc=0 >>
+# NAME                STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE
+# ollama-shared-pvc   Bound    pvc-b7fe22bc-2a92-4188-9320-79cc3de39543   100Gi      RWO            standard       <unset>                 102s
+# terminal#ansible all -i hosts.ini  -m command -a "kubectl get pods -n ai-deployment"
+
+# [WARNING]: Host '54.81.76.56' is using the discovered Python interpreter at '/usr/bin/python3.12', but future installation of another Python interpreter could cause a different interpreter to be discovered. See https://docs.ansible.com/ansible-core/2.19/reference_appendices/interpreter_discovery.html for more information.
+# 54.81.76.56 | CHANGED | rc=0 >>
+# NAME                         READY   STATUS              RESTARTS   AGE
+# ollama-8f4c4ff69-5xqlt       1/1     Running             0          108s
+# openwebui-7b4844b675-kzq7h   0/1     ContainerCreating   0          97s
+# terminal#ansible all -i hosts.ini  -m command -a "kubectl get pods -A"
+# [WARNING]: Host '54.81.76.56' is using the discovered Python interpreter at '/usr/bin/python3.12', but future installation of another Python interpreter could cause a different interpreter to be discovered. See https://docs.ansible.com/ansible-core/2.19/reference_appendices/interpreter_discovery.html for more information.
+# 54.81.76.56 | CHANGED | rc=0 >>
+# NAMESPACE            NAME                                         READY   STATUS              RESTARTS   AGE
+# ai-deployment        ollama-8f4c4ff69-5xqlt                       1/1     Running             0          2m11s
+# ai-deployment        openwebui-7b4844b675-kzq7h                   0/1     ContainerCreating   0          2m
+# kube-system          coredns-674b8bbfcf-jm9tt                     1/1     Running             0          3m20s
+# kube-system          coredns-674b8bbfcf-jswds                     1/1     Running             0          3m20s
+# kube-system          etcd-kind-control-plane                      1/1     Running             0          3m25s
+# kube-system          kindnet-hhth8                                1/1     Running             0          3m16s
+# kube-system          kindnet-nzxrd                                1/1     Running             0          3m21s
+# kube-system          kindnet-pt4x2                                1/1     Running             0          3m17s
+# kube-system          kube-apiserver-kind-control-plane            1/1     Running             0          3m25s
+# kube-system          kube-controller-manager-kind-control-plane   1/1     Running             0          3m25s
+# kube-system          kube-proxy-4ttvt                             1/1     Running             0          3m21s
+# kube-system          kube-proxy-9rzcf                             1/1     Running             0          3m16s
+# kube-system          kube-proxy-shhch                             1/1     Running             0          3m17s
+# kube-system          kube-scheduler-kind-control-plane            1/1     Running             0          3m25s
+# local-path-storage   local-path-provisioner-7dc846544d-5nnng      1/1     Running             0          3m20s
+# terminal#ansible all -i hosts.ini  -m command -a "kubectl get pods -A"
+# [WARNING]: Host '54.81.76.56' is using the discovered Python interpreter at '/usr/bin/python3.12', but future installation of another Python interpreter could cause a different interpreter to be discovered. See https://docs.ansible.com/ansible-core/2.19/reference_appendices/interpreter_discovery.html for more information.
+# 54.81.76.56 | CHANGED | rc=0 >>
+# NAMESPACE            NAME                                         READY   STATUS    RESTARTS   AGE
+#  ansible all -i hosts.ini  -m shell -a "kubectl exec -it deploy/ollama -n ai-deployment -- ollama list"
+# [WARNING]: Host '54.81.76.56' is using the discovered Python interpreter at '/usr/bin/python3.12', but future installation of another Python interpreter could cause a different interpreter to be discovered. See https://docs.ansible.com/ansible-core/2.19/reference_appendices/interpreter_discovery.html for more information.
+# 54.81.76.56 | CHANGED | rc=0 >>
+# NAME             ID              SIZE      MODIFIED      
+# llama2:latest    78e26419b446    3.8 GB    5 minutes ago    
+# 

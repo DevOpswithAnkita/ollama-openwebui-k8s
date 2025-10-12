@@ -1,0 +1,70 @@
+# Create the adhoc commands text file content and save it for download
+
+adhoc_commands
+ansible all -i hosts.ini -m ping
+
+# Ansible Ad-hoc Commands for Ollama Deployment on Kind
+
+# Add ubuntu to docker group
+ansible all -i hosts.ini  -b -m user -a "name=ubuntu groups=docker append=yes"
+
+# Fix docker socket permissions
+ansible all -i hosts.ini  -b -m file -a "path=/var/run/docker.sock mode=0666"
+
+# Create k8s-Deployment directory
+ansible all -i hosts.ini  -b -m file -a "path=/home/ubuntu/k8s-Deployment state=directory owner=ubuntu group=ubuntu mode=0755"
+
+# Copy all deployment files
+ansible all -i hosts.ini  -b -m copy -a "src=../k8s-Deployment/ dest=/home/ubuntu/k8s-Deployment/ owner=ubuntu group=ubuntu mode=0644"
+
+# Create .kube directory
+ansible all -i hosts.ini  -b -m file -a "path=/home/ubuntu/.kube state=directory owner=ubuntu group=ubuntu mode=0755"
+
+# Check if Kind cluster exists
+ansible all -i hosts.ini  -m command -a "kind get clusters"
+
+# Create Kind cluster (if not exists)
+ansible all -i hosts.ini  -m command -a "kind create cluster --name kind --config /home/ubuntu/k8s-Deployment/kind-config.yml"
+
+# Export Kind kubeconfig
+ansible all -i hosts.ini  -m shell -a "kind get kubeconfig --name kind > /home/ubuntu/.kube/config"
+
+# Fix kubeconfig permissions
+ansible all -i hosts.ini  -b -m file -a "path=/home/ubuntu/.kube/config owner=ubuntu group=ubuntu mode=0600"
+
+# Verify cluster nodes
+ansible all -i hosts.ini  -m command -a "kubectl get nodes"
+
+# Create namespace
+ansible all -i hosts.ini  -m command -a "kubectl create namespace ai-deployment"
+
+# Apply PVC
+ansible all -i hosts.ini  -m command -a "kubectl apply -f /home/ubuntu/k8s-Deployment/ollama-shared-pvc.yaml -n ai-deployment"
+
+# Deploy Ollama
+ansible all -i hosts.ini  -m command -a "kubectl apply -f /home/ubuntu/k8s-Deployment/ollama-deploy.yml -n ai-deployment"
+
+# Deploy OpenWebUI
+ansible all -i hosts.ini  -m command -a "kubectl apply -f /home/ubuntu/k8s-Deployment/openwebui-deploy.yml -n ai-deployment"
+
+# Check pods status
+ansible all -i hosts.ini  -m command -a "kubectl get pods -n ai-deployment"
+
+# Get all resources
+ansible all -i hosts.ini  -m command -a "kubectl get all -n ai-deployment"
+
+# Get services
+ansible all -i hosts.ini  -m command -a "kubectl get svc -n ai-deployment"
+
+# Get PVC status
+ansible all -i hosts.ini -m command -a "kubectl get pvc -n ai-deployment"
+ansible all -i hosts.ini  -m command -a "kubectl get pods -A"
+
+# Get Ollama pod name
+ansible all -i hosts.ini  -m shell -a "kubectl get pods -n ai-deployment -l app=ollama -o jsonpath='{.items[0].metadata.name}'"
+
+# Install model in Ollama pod
+ansible all -i hosts.ini  -m shell -a "kubectl exec -it deploy/ollama -n ai-deployment -- ollama pull llama2:latest"
+# List installed models
+ansible all -i hosts.ini  -m shell -a "kubectl exec -it deploy/ollama -n ai-deployment -- ollama list"
+

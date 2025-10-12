@@ -160,6 +160,11 @@ kubectl set env deployment/openwebui -n ai-deployment \
 sudo growpart /dev/xvda 1
 sudo resize2fs /dev/xvda1
 ```
+### Ram Issue  
+```bash
+The model you are trying to load needs 6 GiB of RAM, but your system currently only has 1.8 GiB free. I change it to t3.large (8 GiB)
+```
+![AWS Resources](Error-After-Deployment.png)
 
 ## Debug Commands
 ```bash
