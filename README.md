@@ -109,9 +109,8 @@ kubectl get svc openwebui -n ai-deployment
 Access URL: `http://<EC2_PUBLIC_IP>:<NODEPORT>`
 ![AWS Resources](OpenWebUI.png)
 
-### Connected Ollama models in OpenWebUI:
-   
-   ## Go to User Admin Panel → Settings → Connections → Manage Ollama API ▪️Connections → Update the Ollama URL: "http://ollama:11434"
+## Connected Ollama models in OpenWebUI:
+   ### Go to User Admin Panel → Settings → Connections → Manage Ollama API ▪️Connections → Update the Ollama URL: "http://ollama:11434"
 
 ![AWS Resources](chat.png)
 
@@ -191,7 +190,7 @@ kubectl logs -f deploy/openwebui -n ai-deployment
 kubectl describe pod <pod-name> -n ai-deployment
 ```
 
-#### Production Considerations
+## Production Considerations
 
 This setup is designed for **development/testing with AWS free tier**. For production:
 
@@ -203,7 +202,7 @@ This setup is designed for **development/testing with AWS free tier**. For produ
 - **Monitoring** with Prometheus and Grafana
 - **Backup strategy** for persistent volumes
 
-## Why Kind?
+### Why Kind?
 Kind is used here because:
 - AWS free tier doesn't support EKS
 - Single EC2 instance deployment
