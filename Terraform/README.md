@@ -45,7 +45,7 @@ terraform output
 ***Open the URL in your browser***
   ```bash
        
-        webui_url = "http://public-ip:8080"
+        webui_url = "http://public-ip:30080"
    ```
 ---
 

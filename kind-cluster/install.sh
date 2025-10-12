@@ -9,7 +9,7 @@ if ! command -v docker &>/dev/null; then
   sudo apt-get update -y
   sudo apt-get install -y docker.io
   sudo usermod -aG docker "$USER"
-  sudo newgrp docker
+  newgrp docker
 else
   echo "Docker already installed."
 fi
